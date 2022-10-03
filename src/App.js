@@ -34,8 +34,11 @@ function reducer(state, { type, payload }) {
           previousOperand: state.currentOperand,
           currentOperand: "",
           operation: payload.operation
-        };
-      }
+        }; 
+      } else return {
+        ...state,
+        operation: payload.operation,
+      };
     case ACTIONS.CLEAR:
       return {
         state: {}
@@ -78,7 +81,7 @@ function App() {
   );
 
   function handleOperation(operation) {
-    if (previousOperand) {
+    if (previousOperand && currentOperand) {
       dispatch({type: ACTIONS.EVALUATE});
     }
     dispatch({type: ACTIONS.CHOOSE_OPERATION, payload: {operation}});
@@ -93,7 +96,7 @@ function App() {
           dispatch({type: ACTIONS.DELETE_DIGIT});
         }
         break;
-      case ((event.keyCode >= 48 && event.keyCode <= 57 && event.key != "*") || (event.keyCode == 190)):
+      case ((+event.key >= 0 && +event.key <= 9) || (event.keyCode == 190)):
         let digit = String(event.key);
         dispatch({type: ACTIONS.ADD_DIGIT, payload: { digit }});
         break;
